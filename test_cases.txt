@@ -1,0 +1,109 @@
+Parameters
+- Number of layers: 2
+- Cache layer size:
+	L1: 128
+	L2: 512
+- Latency:
+	L1: 1
+	L2: 50
+- Block size: 8
+- Set associativity:
+	L1: 4
+	L2: 8
+- Write-through/write-back: Write-back
+
+
+Cache Warmup
+r 32 1
+r 64 2
+r 96 3
+r 128 4
+r 160 5
+r 192 6
+r 224 7
+r 256 8
+r 40 9
+r 72 10
+r 104 11
+r 136 12
+r 168 13
+r 200 14
+r 232 15
+r 264 16
+r 48 17
+r 80 18
+r 112 19
+r 144 20
+r 176 21
+r 208 22
+r 240 23
+r 272 24
+r 56 25
+r 88 26
+r 120 27
+r 152 28
+r 184 29
+r 216 30
+r 248 31
+r 280 32
+
+
+Case 1: Read Test - L1 Miss
+r 248 10000
+r 184 10003
+r 280 10005
+r 216 10007
+r 120 10009 (Miss)
+r 40 10011 (Miss)
+r 280 11000 (Hit)
+r 184 11003 (Miss)
+r 136 11005 (Miss)
+r 216 12000 (Miss)
+
+
+Case 2: Read Test - L2 Miss
+r 248 10000
+r 184 10003
+r 280 10005
+r 216 10007
+r 320 10100 (Miss)
+r 280 10105 (Hit)
+r 312 11000 (Miss)
+r 312 11000 (Hit)
+r 328 11001 (Miss)
+r 344 11003 (Miss)
+r 72 12000 (L1 Miss)
+r 328 12001 (Hit)
+r 72 12003 (Hit)
+
+
+Case 3: Write Test - L1 Miss, L2 Hit
+w 248 10000 7
+r 184 10003
+w 280 10005 8
+r 216 10007
+w 88 10100 1 (L1 Miss)
+r 248 10103 (L1 Miss)
+w 184 11000 5 (L1 Miss)
+r 280 11003 (L1 Miss)
+w 185 11005 50 (Hit)
+r 216 12003 (L1 Miss)
+w 152 12005 2 (L1 Miss)
+r 184 12007 (Hit)
+
+
+Case 4: Write Test - L1 Miss, L2 Miss
+w 248 10000 7
+r 184 10003
+w 280 10005 8
+r 216 10007
+w 664 10100 10 (Miss)
+r 728 10103 (Miss)
+w 792 11000 12 (Miss)
+r 728 11003 (Hit)
+r 664 11005 (Hit)
+r 24 11007 (Miss)
+w 665 12003 100 (Hit)
+w 856 12005 13 (Miss)
+w 793 12007 120 (L1 Miss)
+r 856 13003 (Hit)
